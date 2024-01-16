@@ -1,0 +1,110 @@
+@layer base {
+   :root {
+      --dimWhite: theme(colors.blue-gray.500);
+      --darkGray: rgb(24 34 46 / 1);
+   }
+   :root[data-theme="red"] {
+      --dimTeal: rgb(245 64 51 / 0.15);
+      --teal-50: theme(colors.red.50);
+      --teal-100: theme(colors.red.100);
+      --teal-200: theme(colors.red.200);
+      --teal-300: theme(colors.red.300);
+      --teal-400: theme(colors.red.400);
+      --teal-500: theme(colors.red.500);
+      --teal-600: theme(colors.red.600);
+      --teal-700: theme(colors.red.700);
+      --teal-800: theme(colors.red.800);
+      --teal-900: theme(colors.red.900);
+   }
+   :root[data-theme="blue"] {
+      --dimTeal: rgb(32 148 243 / 0.15);
+      --teal-50: theme(colors.blue.50);
+      --teal-100: theme(colors.blue.100);
+      --teal-200: theme(colors.blue.200);
+      --teal-300: theme(colors.blue.300);
+      --teal-400: theme(colors.blue.400);
+      --teal-500: theme(colors.blue.500);
+      --teal-600: theme(colors.blue.600);
+      --teal-700: theme(colors.blue.700);
+      --teal-800: theme(colors.blue.800);
+      --teal-900: theme(colors.blue.900);
+   }
+   :root[data-theme="teal"] {
+      --dimTeal: rgb(0 148 133 / 0.15);
+      --teal-50: #e0f2f1;
+      --teal-100: #b2dfdb;
+      --teal-200: #80cbc4;
+      --teal-300: #4db6ac;
+      --teal-400: #26a69a;
+      --teal-500: #009688;
+      --teal-600: #00897b;
+      --teal-700: #00796b;
+      --teal-800: #00695c;
+      --teal-900: #004d40;
+   }
+   :root[data-theme="pink"] {
+      --dimTeal: rgb(233 32 99 / 0.15);
+      --teal-50: theme(colors.pink.50);
+      --teal-100: theme(colors.pink.100);
+      --teal-200: theme(colors.pink.200);
+      --teal-300: theme(colors.pink.300);
+      --teal-400: theme(colors.pink.400);
+      --teal-500: theme(colors.pink.500);
+      --teal-600: theme(colors.pink.600);
+      --teal-700: theme(colors.pink.700);
+      --teal-800: theme(colors.pink.800);
+      --teal-900: theme(colors.pink.900);
+   }
+   :root[data-theme="indigo"] {
+      --dimTeal: rgb(64 81 181 / 0.15);
+      --teal-50: theme(colors.indigo.50);
+      --teal-100: theme(colors.indigo.100);
+      --teal-200: theme(colors.indigo.200);
+      --teal-300: theme(colors.indigo.300);
+      --teal-400: theme(colors.indigo.400);
+      --teal-500: theme(colors.indigo.500);
+      --teal-600: theme(colors.indigo.600);
+      --teal-700: theme(colors.indigo.700);
+      --teal-800: theme(colors.indigo.800);
+      --teal-900: theme(colors.indigo.900);
+   }
+   :root[data-theme="orange"] {
+      --dimTeal: rgb(255 153 0 / 0.15);
+      --teal-50: theme(colors.orange.50);
+      --teal-100: theme(colors.orange.100);
+      --teal-200: theme(colors.orange.200);
+      --teal-300: theme(colors.orange.300);
+      --teal-400: theme(colors.orange.400);
+      --teal-500: theme(colors.orange.500);
+      --teal-600: theme(colors.orange.600);
+      --teal-700: theme(colors.orange.700);
+      --teal-800: theme(colors.orange.800);
+      --teal-900: theme(colors.orange.900);
+   }
+   :root[data-theme="deep-orange"] {
+      --dimTeal: rgb(255 87 36 / 0.15);
+      --teal-50: theme(colors.deep-orange.50);
+      --teal-100: theme(colors.deep-orange.100);
+      --teal-200: theme(colors.deep-orange.200);
+      --teal-300: theme(colors.deep-orange.300);
+      --teal-400: theme(colors.deep-orange.400);
+      --teal-500: theme(colors.deep-orange.500);
+      --teal-600: theme(colors.deep-orange.600);
+      --teal-700: theme(colors.deep-orange.700);
+      --teal-800: theme(colors.deep-orange.800);
+      --teal-900: theme(colors.deep-orange.900);
+   }
+   :root[data-theme="deep-purple"] {
+      --dimTeal: rgb(103 58 182 / 0.15);
+      --teal-50: theme(colors.deep-purple.50);
+      --teal-100: theme(colors.deep-purple.100);
+      --teal-200: theme(colors.deep-purple.200);
+      --teal-300: theme(colors.deep-purple.300);
+      --teal-400: theme(colors.deep-purple.400);
+      --teal-500: theme(colors.deep-purple.500);
+      --teal-600: theme(colors.deep-purple.600);
+      --teal-700: theme(colors.deep-purple.700);
+      --teal-800: theme(colors.deep-purple.800);
+      --teal-900: theme(colors.deep-purple.900);
+   }
+}

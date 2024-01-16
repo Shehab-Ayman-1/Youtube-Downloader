@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Merienda:wght@300;400;500;600;700;800;900&display=swap");
+
+@font-face {
+   font-family: "STV";
+   src: url("@/assets/fonts/stv.ttf") format("truetype");
+}
+
+* {
+   @apply m-0 box-border list-none scroll-smooth border-none p-0 capitalize decoration-transparent outline-none;
+}
+
+html {
+   @apply bg-gradient min-h-screen w-screen overflow-x-hidden;
+   &.dark {
+      @apply from-black via-darkGray to-black;
+      ::-webkit-scrollbar-track {
+         @apply bg-black;
+      }
+      [type="month"]::-webkit-calendar-picker-indicator {
+         @apply cursor-pointer invert hover:opacity-80;
+      }
+   }
+   * ::-webkit-scrollbar {
+      @apply h-[3px] w-[3px];
+   }
+   ::-webkit-scrollbar {
+      @apply w-[5px];
+   }
+   ::-webkit-scrollbar-thumb {
+      @apply rounded-xl bg-teal-500;
+   }
+   ::-webkit-scrollbar-track {
+      @apply bg-white;
+   }
+   ::selection {
+      @apply bg-teal-500 text-white;
+      text-shadow: 5px 5px 10px black;
+   }
+}
+
+i {
+   @apply cursor-pointer text-xl text-dimWhite;
+   &:hover {
+      @apply scale-125 text-teal-500;
+   }
+}
