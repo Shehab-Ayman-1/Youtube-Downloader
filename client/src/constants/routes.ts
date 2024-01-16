@@ -11,7 +11,7 @@ export const routes = {
       ...options,
    },
    remote: {
-      baseURL: "youtube-downloader-server",
+      baseURL: "https://youtube-downloader-server/api",
       ...options,
    },
 };
