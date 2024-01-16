@@ -11,7 +11,7 @@ export const routes = {
       ...options,
    },
    remote: {
-      baseURL: "https://youtube-downloader-server/api",
+      baseURL: "https://youtube-downloader-server.netlify.app/api",
       ...options,
    },
 };

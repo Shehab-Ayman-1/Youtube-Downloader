@@ -2,7 +2,7 @@ const whiteList = [
 	"http://localhost:5000",
 	"http://localhost:5173",
 	"http://localhost:5174",
-	"https://youtube-downloader-client",
+	"https://youtube-downloader-client.netlify.app",
 ];
 
 export const corsOrigins = {
