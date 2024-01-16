@@ -2,7 +2,7 @@ const whiteList = [
 	"http://localhost:5000",
 	"http://localhost:5173",
 	"http://localhost:5174",
-	"youtube-downloader-client",
+	"https://youtube-downloader-client",
 ];
 
 export const corsOrigins = {
