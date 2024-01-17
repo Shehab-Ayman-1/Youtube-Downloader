@@ -15,6 +15,7 @@ export const DOWNLOAD_VIDEO = async (req, res) => {
 			duration: stream.approxDurationMs,
 			thumbnail: thumbnails[2],
 			downloadedUrl: stream.url,
+			quality: stream.qualityLabel,
 		};
 		res.status(200).send([video]);
 	} catch (error) {
@@ -32,21 +33,19 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 
 		const items = playlist.items.map(async ({ title, url, shortUrl, duration, thumbnails }, i) => {
 			const info = await ytdl.getInfo(url);
-			const downloadedUrl =
+			const stream =
 				info.formats.find((item) => item.qualityLabel === quality && item.hasAudio) ||
 				info.formats.find((item) => item.qualityLabel === "360p" && item.hasAudio) ||
 				info.formats.find((item) => item.qualityLabel === "480p" && item.hasAudio) ||
 				info.formats.find((item) => item.qualityLabel === "720p");
-
-			console.log(downloadedUrl);
 
 			return {
 				title: `${i >= 10 ? i : `0${i + 1}`} ${title}`,
 				url: shortUrl,
 				duration,
 				thumbnail: thumbnails[2],
-				downloadedUrl: downloadedUrl?.url,
-				quality: downloadedUrl.qualityLabel,
+				downloadedUrl: stream?.url,
+				quality: stream.qualityLabel,
 			};
 		});
 
