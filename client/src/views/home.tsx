@@ -16,6 +16,7 @@ type ResponseProps = {
    url: string;
    duration: string;
    downloadedUrl: string;
+   quality: string;
    thumbnail: { url: string; width: string; height: string };
 };
 
@@ -26,8 +27,8 @@ export const Home = () => {
    const handleSubmit = async (event: FormSubmitEvent) => {
       event.preventDefault();
 
-      const isPlaylist = formData.url.startsWith("https://www.youtube.com/playlist?list=");
-      const isVideo = formData.url.startsWith("https://www.youtube.com/watch?v");
+      const isPlaylist = formData.url.includes("/playlist?list=");
+      const isVideo = formData.url.includes("/watch?v=");
 
       if (formData.type === "playlist" && !isPlaylist) return alert("Wronge Playlist URL");
       if (formData.type === "video" && !isVideo) return alert("Wronge Video URL");
@@ -49,8 +50,16 @@ export const Home = () => {
             <SubmitButtons data={data} loading={loading} />
          </form>
 
-         {data?.map(({ title, url, duration, thumbnail }, i) => (
-            <VideoCard title={title} url={url} duration={duration} thumbnail={thumbnail} key={i} />
+         {data?.map(({ title, url, duration, downloadedUrl, quality, thumbnail }, i) => (
+            <VideoCard
+               title={title}
+               url={url}
+               downloadedUrl={downloadedUrl}
+               duration={duration}
+               thumbnail={thumbnail}
+               quality={quality}
+               key={i}
+            />
          ))}
       </section>
    );

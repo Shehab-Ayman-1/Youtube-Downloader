@@ -28,7 +28,7 @@ export const SubmitButtons = ({ data, loading }: SubmitButtonsProps) => {
    };
 
    return (
-      <div className="flex-center my-10">
+      <div className="flex-center my-5">
          <Button
             type="submit"
             icon="fa-search text-white group-hover:text-white"

@@ -12,7 +12,7 @@ export const DOWNLOAD_VIDEO = async (req, res) => {
 		const video = {
 			title,
 			url,
-			duration: "00,00",
+			duration: stream.approxDurationMs,
 			thumbnail: thumbnails[2],
 			downloadedUrl: stream.url,
 		};
@@ -30,20 +30,23 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 		const playlistId = url.slice(url.indexOf("list=") + 5);
 		const playlist = await ytpl(playlistId, { limit: Infinity });
 
-		const items = playlist.items.map(async ({ title, url, duration, thumbnails }, i) => {
+		const items = playlist.items.map(async ({ title, url, shortUrl, duration, thumbnails }, i) => {
 			const info = await ytdl.getInfo(url);
 			const downloadedUrl =
-				info.formats.find((item) => item.qualityLabel === quality) ||
-				info.formats.find((item) => item.qualityLabel === "360p") ||
-				info.formats.find((item) => item.qualityLabel === "480p") ||
+				info.formats.find((item) => item.qualityLabel === quality && item.hasAudio) ||
+				info.formats.find((item) => item.qualityLabel === "360p" && item.hasAudio) ||
+				info.formats.find((item) => item.qualityLabel === "480p" && item.hasAudio) ||
 				info.formats.find((item) => item.qualityLabel === "720p");
+
+			console.log(downloadedUrl);
 
 			return {
 				title: `${i >= 10 ? i : `0${i + 1}`} ${title}`,
-				url,
+				url: shortUrl,
 				duration,
 				thumbnail: thumbnails[2],
 				downloadedUrl: downloadedUrl?.url,
+				quality: downloadedUrl.qualityLabel,
 			};
 		});
 

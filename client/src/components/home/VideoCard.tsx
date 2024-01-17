@@ -1,31 +1,47 @@
-import { Typography } from "../ui";
+import { Button, Typography } from "../ui";
 
 type VideoCardProps = {
    title: string;
    url: string;
    duration: string;
+   quality: string;
+   downloadedUrl: string;
    thumbnail: { url: string; width: string; height: string };
 };
 
-export const VideoCard = ({ title, url, duration, thumbnail }: VideoCardProps) => {
+export const VideoCard = ({ title, url, duration, quality, downloadedUrl, thumbnail }: VideoCardProps) => {
    return (
-      <div className="bg-gradient my-10 flex !items-start gap-5 rounded-md shadow-md shadow-dimWhite">
-         <div className="relative">
-            <img
-               src={thumbnail.url}
-               alt="img"
-               className="rounded-md"
-               style={{ width: thumbnail.width, height: thumbnail.height }}
-            />
-            <Typography className="absolute bottom-1 right-1 rounded-sm bg-black text-white">
-               {duration}
-            </Typography>
+      <div className="flex-between bg-gradient my-10 flex-col rounded-md p-2 shadow-md shadow-dimWhite md:flex-row">
+         <div className="flex w-full flex-col items-start md:flex-row">
+            <div className="relative m-auto h-full">
+               <img
+                  src={thumbnail.url}
+                  alt="img"
+                  className="rounded-md"
+                  style={{ width: thumbnail.width, height: thumbnail.height }}
+               />
+               <Typography className="absolute left-1 top-1 rounded-sm bg-black text-white">{quality}</Typography>
+               <Typography className="absolute bottom-1 right-1 rounded-sm bg-black text-white">
+                  {duration}
+               </Typography>
+            </div>
+
+            <div className="w-full overflow-x-hidden">
+               <Typography>{title}</Typography>
+               <Typography className="my-3">{quality}</Typography>
+               <Typography className="text-sm text-dimWhite hover:text-black dark:hover:text-white">
+                  <a href={url} target="_blank" rel="noopener noreferrer">
+                     {url}
+                  </a>
+               </Typography>
+            </div>
          </div>
 
-         <div className="">
-            <Typography>{title}</Typography>
-            <Typography className="text-sm text-dimWhite">{url}</Typography>
-         </div>
+         <Button icon="fa-download text-white group-hover:text-white" className="justify-self-end">
+            <a href={downloadedUrl} className="h-full w-full" target="_blank" download rel="noopener noreferrer">
+               Download
+            </a>
+         </Button>
       </div>
    );
 };
