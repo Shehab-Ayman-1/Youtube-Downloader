@@ -39,7 +39,7 @@ export const SubmitButtons = ({ data, loading }: SubmitButtonsProps) => {
          </Button>
          <Button
             icon={`${coppied ? "fa-check-double !text-xl" : "fa-clipboard"} text-white group-hover:text-white`}
-            className="mt-5"
+            className={`mt-5 ${!data?.length ? "!hidden" : ""} `}
             onClick={handleClipboard}
          >
             {coppied ? "Coppied" : "Copy"}

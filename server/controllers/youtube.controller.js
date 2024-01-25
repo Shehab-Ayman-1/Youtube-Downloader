@@ -6,7 +6,11 @@ export const DOWNLOAD_VIDEO = async (req, res) => {
 		const { url, quality } = req.body;
 
 		const info = await ytdl.getInfo(url);
-		const stream = info.formats.find((item) => item.qualityLabel === quality);
+		const stream = info.formats.find((item) => item.qualityLabel === quality && item.hasAudio && item.hasVideo);
+		if (!stream)
+			return res
+				.status(400)
+				.json({ error: "This Video Quality Is Not Supported, Please Change The Video Quality" });
 		const { title, thumbnails } = info.videoDetails;
 
 		const video = {
@@ -34,9 +38,9 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 		const items = playlist.items.map(async ({ title, url, shortUrl, duration, thumbnails }, i) => {
 			const info = await ytdl.getInfo(url);
 			const stream =
-				info.formats.find((item) => item.qualityLabel === quality && item.hasAudio) ||
-				info.formats.find((item) => item.qualityLabel === "360p" && item.hasAudio) ||
-				info.formats.find((item) => item.qualityLabel === "480p" && item.hasAudio) ||
+				info.formats.find((item) => item.qualityLabel === quality && item.hasAudio && item.hasVideo) ||
+				info.formats.find((item) => item.qualityLabel === "360p" && item.hasAudio && item.hasVideo) ||
+				info.formats.find((item) => item.qualityLabel === "480p" && item.hasAudio && item.hasVideo) ||
 				info.formats.find((item) => item.qualityLabel === "720p");
 
 			return {
