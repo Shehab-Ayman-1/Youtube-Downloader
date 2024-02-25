@@ -12,8 +12,8 @@ type VideoCardProps = {
 export const VideoCard = ({ title, url, duration, quality, downloadedUrl, thumbnail }: VideoCardProps) => {
    return (
       <div className="flex-between bg-gradient my-10 flex-col rounded-md p-2 shadow-md shadow-dimWhite md:flex-row">
-         <div className="flex w-full flex-col items-start md:flex-row">
-            <div className="relative mr-3 h-full">
+         <div className="flex w-full flex-col items-center md:flex-row md:items-start">
+            <div className="relative my-auto mr-3 h-full">
                <img
                   src={thumbnail.url}
                   alt="img"
@@ -29,9 +29,11 @@ export const VideoCard = ({ title, url, duration, quality, downloadedUrl, thumbn
             </div>
 
             <div className="w-full overflow-x-hidden">
-               <Typography>{title}</Typography>
-               <Typography className="my-3">{quality}</Typography>
-               <Typography className="w-fit text-sm text-dimWhite hover:text-black dark:hover:text-white">
+               <Typography className="text-center text-base md:text-start md:text-xl">{title}</Typography>
+               <Typography className="my-1 text-center text-base md:my-3 md:text-start md:text-xl">
+                  {quality}
+               </Typography>
+               <Typography className="w-fit text-center text-sm text-dimWhite hover:text-black md:text-start dark:hover:text-white">
                   <a href={url} target="_blank" rel="noopener noreferrer">
                      {url}
                   </a>

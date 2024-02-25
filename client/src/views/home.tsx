@@ -41,7 +41,7 @@ export const Home = () => {
       <section className="container mx-auto p-5">
          <Loading isSubmitted={isSubmitted} loading={loading} error={error} message={data} />
 
-         <h1 className="text-center text-4xl font-extrabold text-teal-500">Youtube Downloader</h1>
+         <h1 className="text-center text-3xl font-extrabold text-teal-500 md:text-4xl">Youtube Downloader</h1>
 
          <Buttons formData={formData} setFormData={setFormData} />
 
