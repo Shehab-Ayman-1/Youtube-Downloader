@@ -22,7 +22,7 @@ type ResponseProps = {
 
 export const Home = () => {
    const { data, loading, error, isSubmitted, refetch } = useAxios<ResponseProps[]>();
-   const [formData, setFormData] = useState<FormDataProps>({ type: "video", url: "", quality: "360p" });
+   const [formData, setFormData] = useState<FormDataProps>({ type: "playlist", url: "", quality: "360p" });
 
    const handleSubmit = async (event: FormSubmitEvent) => {
       event.preventDefault();
