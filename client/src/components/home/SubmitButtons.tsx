@@ -2,25 +2,22 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui";
 import { ResponseProps } from "@/views";
-import { routes } from "@/constants";
 
 type SubmitButtonsProps = {
    data?: ResponseProps[];
    loading: boolean;
+   getDownloadURL: (url: string, quality: string) => void;
 };
 
-export const SubmitButtons = ({ data, loading }: SubmitButtonsProps) => {
+export const SubmitButtons = ({ data, loading, getDownloadURL }: SubmitButtonsProps) => {
    const [coppied, setCoppied] = useState(false);
 
    const onCopy = async () => {
       if (!data) return;
 
-      const baseURL = routes.locale.baseURL;
-      console.log(data);
-
       const urls = data
          .map((video) => {
-            const url = `${baseURL}/stream?url=${encodeURIComponent(video.url)}&quality=${video.quality}`;
+            const url = getDownloadURL(video.url, video.quality);
             // eslint-disable-next-line no-useless-escape
             const name = video.title.replace(/[\/\\:*?"<>|]/g, "");
             return `${url}\noutput: ${name}.mp4\n`;

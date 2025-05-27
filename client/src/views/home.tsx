@@ -27,6 +27,10 @@ export const Home = () => {
    const { data, loading, error, isSubmitted, refetch } = useAxios<ResponseProps[]>();
    const [formData, setFormData] = useState<FormDataProps>({ type: "playlist", url: "", quality: "360p" });
 
+   const getDownloadURL = (url: string, quality: string) => {
+      return `${baseURL}/stream?url=${encodeURIComponent(url)}&quality=${quality}`;
+   };
+
    const handleSubmit = async (event: FormSubmitEvent) => {
       event.preventDefault();
 
@@ -48,12 +52,12 @@ export const Home = () => {
 
          <form onSubmit={handleSubmit} className="rounded-lg p-4 shadow-sp shadow-dimWhite">
             <Fields formData={formData} setFormData={setFormData} />
-            <SubmitButtons data={data} loading={loading} />
+            <SubmitButtons data={data} loading={loading} getDownloadURL={getDownloadURL} />
          </form>
 
          {data?.map(({ title, url, duration, quality, thumbnail }, i) => (
             <VideoCard
-               downloadedUrl={url ? `${baseURL}/stream?url=${encodeURIComponent(url)}&quality=${quality}` : null}
+               downloadedUrl={url ? getDownloadURL(url, quality) : null}
                thumbnail={thumbnail}
                duration={duration}
                quality={quality}
