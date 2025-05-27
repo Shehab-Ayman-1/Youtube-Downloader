@@ -68,7 +68,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 		const { data } = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
 			params: {
 				key: YOUTUBE_API_KEY,
-				maxResults: 3,
+				maxResults: 1000,
 				part: "snippet",
 				playlistId,
 			},
