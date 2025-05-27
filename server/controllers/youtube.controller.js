@@ -82,7 +82,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 					if (!format) return { duration, thumbnail, title, url, quality: altFormat.qualityLabel, downloadedUrl: altFormat.url };
 					return { duration, thumbnail, title, quality: format.qualityLabel, downloadedUrl: format.url, url };
 				} catch (err) {
-					console.warn("Fail to fetch video:", info.videoDetails.title);
+					console.warn("Fail to fetch video:");
 					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail to fetch` };
 				}
 			})
