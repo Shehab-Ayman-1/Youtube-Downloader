@@ -12,12 +12,12 @@ type FormDataProps = {
    quality: string | undefined;
 };
 
-type ResponseProps = {
+export type ResponseProps = {
    title: string;
    url: string;
+   quality: string;
    duration: string;
    downloadedUrl: string;
-   quality: string;
    thumbnail: { url: string; width: string; height: string };
 };
 

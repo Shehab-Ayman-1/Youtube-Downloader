@@ -1,17 +1,11 @@
 import { useState } from "react";
+
 import { Button } from "@/components/ui";
+import { ResponseProps } from "@/views";
 import { routes } from "@/constants";
 
-type ResponseProps = {
-   title: string;
-   url: string;
-   duration: string;
-   downloadedUrl: string;
-   thumbnail: { url: string; width: string; height: string };
-};
-
 type SubmitButtonsProps = {
-   data: ResponseProps[] | undefined;
+   data?: ResponseProps[];
    loading: boolean;
 };
 
@@ -27,6 +21,7 @@ export const SubmitButtons = ({ data, loading }: SubmitButtonsProps) => {
       const urls = data
          .map((video) => {
             const url = `${baseURL}/stream?url=${encodeURIComponent(video.url)}&quality=${video.quality}`;
+            // eslint-disable-next-line no-useless-escape
             const name = video.title.replace(/[\/\\:*?"<>|]/g, "");
             return `${url}\noutput: ${name}.mp4\n`;
          })
