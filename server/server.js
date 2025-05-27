@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import cookies from "cookie-parser";
 import dotenv from "dotenv";
-import { corsOrigins, DBconnection } from "./configs/index.js";
+import { corsOrigins } from "./configs/index.js";
 import { DOWNLOAD_PLAYLIST, DOWNLOAD_STREAM, DOWNLOAD_VIDEO } from "./controllers/youtube.controller.js";
 
 // Configs
