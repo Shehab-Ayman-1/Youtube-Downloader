@@ -46,6 +46,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 		let pageToken = "";
 		let hasMore = true;
 
+		// Fetch all Playlist Items
 		while (hasMore) {
 			const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
 				params: {
@@ -62,6 +63,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 			hasMore = !!pageToken;
 		}
 
+		// Read all videos from the playlist
 		const videos = await Promise.all(
 			data.map(async (item) => {
 				const videoId = item.snippet.resourceId.videoId;
@@ -72,34 +74,16 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 					const format = info.formats.find((f) => f.qualityLabel === quality && f.hasVideo && f.hasAudio);
 					const altFormat = info.formats.find((f) => f.hasVideo && f.hasAudio);
 
-					if (!format)
-						return {
-							duration: Math.round(info.videoDetails.lengthSeconds / 60) + " m",
-							thumbnail: info.videoDetails.thumbnails.at(-1),
-							title: info.videoDetails.title,
-							quality: altFormat.qualityLabel,
-							downloadedUrl: altFormat.url,
-							url: videoUrl,
-						};
+					const duration = Math.round(info.videoDetails.lengthSeconds / 60) + " m";
+					const thumbnail = info.videoDetails.thumbnails.at(-1);
+					const title = info.videoDetails.title;
+					const url = videoUrl;
 
-					return {
-						duration: Math.round(info.videoDetails.lengthSeconds / 60) + " m",
-						thumbnail: info.videoDetails.thumbnails.at(-1),
-						title: info.videoDetails.title,
-						quality: format.qualityLabel,
-						downloadedUrl: format.url,
-						url: videoUrl,
-					};
+					if (!format) return { duration, thumbnail, title, url, quality: altFormat.qualityLabel, downloadedUrl: altFormat.url };
+					return { duration, thumbnail, title, quality: format.qualityLabel, downloadedUrl: format.url, url };
 				} catch (err) {
-					console.warn("Fail to fetch video:", videoUrl);
-					return {
-						duration: "0 m",
-						thumbnail: "",
-						title: "Fail to fetch video",
-						quality: "----",
-						downloadedUrl: "",
-						url: "",
-					};
+					console.warn("Fail to fetch video:", info.videoDetails.title);
+					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail to fetch: ${info.videoDetails.title}` };
 				}
 			})
 		);
@@ -124,7 +108,7 @@ export const DOWNLOAD_STREAM = async (req, res) => {
 
 		if (!format) return res.status(404).json({ error: `The Available Qualities Are: [ ${availableQualities.join(" | ")} ]` });
 
-		const title = sanitize(info.videoDetails.title) || "video";
+		const title = sanitize(info.videoDetails.title) || "[hidden]";
 		const filename = `${title}.mp4`;
 
 		res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(filename)}"`);
