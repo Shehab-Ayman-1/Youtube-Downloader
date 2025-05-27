@@ -22,10 +22,5 @@ app.get("/api/stream", DOWNLOAD_STREAM);
 app.post("/api/playlist", DOWNLOAD_PLAYLIST);
 app.use("/*", (req, res) => res.status(400).json({ method: req.method, url: req.url, message: "Path Not Exist." }));
 
-// Mongo
-DBconnection();
-mongoose.connection.on("connected", () => console.log(`Server Connected 🚀`));
-mongoose.connection.on("disconnected", () => console.log(`Server Disconnected 😢`));
-
 // Server Listenning
 app.listen(5000);

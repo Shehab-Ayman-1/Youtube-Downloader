@@ -44,17 +44,9 @@ export const VideoCard = ({ title, url, duration, quality, downloadedUrl, thumbn
          </div>
 
          {downloadedUrl && (
-            <Button icon="fa-download text-white group-hover:text-white">
-               <a
-                  href={downloadedUrl}
-                  rel="noopener noreferrer"
-                  className="h-full w-full"
-                  target="_blank"
-                  download
-               >
-                  Download
-               </a>
-            </Button>
+            <a href={downloadedUrl} rel="noopener noreferrer" target="_blank" download>
+               <Button icon="fa-download text-white group-hover:text-white">Download</Button>
+            </a>
          )}
       </div>
    );
