@@ -39,14 +39,12 @@ export const useAxios = <Data,>(method?: Method, url?: string, body?: object, op
          if (method === "get") response = await router.get(url, options);
          else response = await router[method](url, body, options);
 
-         let data = response.data;
+         const data = response.data;
          setData(data);
 
          return { data, error, isSubmitted: true, loading: false };
-      } catch (reason) {
-         const error = reason as AxiosError;
-         const err = (error?.response?.data as any).error || error?.message || "Network Error";
-
+      } catch (error: any) {
+         const err = error?.response?.data?.error || error?.message || "Network Error";
          setError(err);
 
          console.log(error);
@@ -61,8 +59,10 @@ export const useAxios = <Data,>(method?: Method, url?: string, body?: object, op
       fetcher(method, url, body, options);
    }, [method, url, body, options]);
 
-   const refetch = async (method?: Method, url?: string, body?: object, options?: object) =>
+   const refetch = async (method?: Method, url?: string, body?: object, options?: object, reset?: boolean) => {
+      if (reset) setData(undefined);
       await fetcher(method, url, body, options);
+   };
 
    return { data, loading, error, isSubmitted, status, refetch };
 };

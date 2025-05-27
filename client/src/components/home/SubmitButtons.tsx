@@ -4,9 +4,9 @@ import { Button } from "@/components/ui";
 import { ResponseProps } from "@/views";
 
 type SubmitButtonsProps = {
+   getDownloadURL: (url: string, quality: string) => void;
    data?: ResponseProps[];
    loading: boolean;
-   getDownloadURL: (url: string, quality: string) => void;
 };
 
 export const SubmitButtons = ({ data, loading, getDownloadURL }: SubmitButtonsProps) => {
@@ -16,6 +16,7 @@ export const SubmitButtons = ({ data, loading, getDownloadURL }: SubmitButtonsPr
       if (!data) return;
 
       const urls = data
+         .filter((video) => video.url)
          .map((video) => {
             const url = getDownloadURL(video.url, video.quality);
             // eslint-disable-next-line no-useless-escape
