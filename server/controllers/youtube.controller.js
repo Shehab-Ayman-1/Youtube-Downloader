@@ -83,14 +83,14 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 					return { duration, thumbnail, title, quality: format.qualityLabel, downloadedUrl: format.url, url };
 				} catch (err) {
 					console.warn("Fail to fetch video:", info.videoDetails.title);
-					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail to fetch: ${info.videoDetails.title}` };
+					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail to fetch` };
 				}
 			})
 		);
 
 		res.status(200).json(videos);
 	} catch (error) {
-		console.error(error.message);
+		console.error(`DOWNLOAD_PLAYLIST: ${error.message}`);
 		res.status(500).json(`DOWNLOAD_PLAYLIST: ${error.message}`);
 	}
 };
