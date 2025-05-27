@@ -10,15 +10,22 @@
 		"deploy": "netlify deploy && netlify deploy --prod"
 	},
 	"dependencies": {
+		"@discordjs/opus": "^0.10.0",
+		"@discordjs/voice": "^0.18.0",
+		"@distube/ytdl-core": "^4.16.10",
+		"@distube/ytpl": "^1.2.2",
+		"axios": "^1.9.0",
 		"bcrypt": "^5.1.1",
 		"cookie-parser": "^1.4.6",
 		"cors": "^2.8.5",
+		"distube": "^5.0.7",
 		"dotenv": "^16.3.1",
 		"express": "^4.18.2",
 		"jsonwebtoken": "^9.0.2",
 		"mongodb": "^6.1.0",
 		"mongoose": "^7.5.3",
-		"ytdl-core": "^4.11.5",
+		"sanitize-filename": "^1.6.3",
+		"youtubei.js": "^13.4.0",
 		"ytpl": "^2.3.0"
 	},
 	"devDependencies": {
