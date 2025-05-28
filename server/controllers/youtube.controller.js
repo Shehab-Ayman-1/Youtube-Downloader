@@ -2,28 +2,17 @@ import sanitize from "sanitize-filename";
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
 
-// https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=<VIDEO_ID>&key=<API_KEY>
-
-const getDuration = (isoDuration) => {
-	const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-	const [, hours, minutes, seconds] = isoDuration.match(regex) || [];
-
-	const totalMinutes = parseInt(hours || "0") * 60 + parseInt(minutes || "0") + Math.round(parseInt(seconds || "0") / 60);
-	return `${totalMinutes} m`;
-};
+import { getDuration } from "../utils";
 
 export const DOWNLOAD_VIDEO = async (req, res) => {
-	const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-
 	try {
 		const { url, quality } = req.body;
 
 		const videoId = new URL(url).searchParams.get("v");
 		const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-		console.log(videoId, YOUTUBE_API_KEY);
 		const { data } = await axios.get(`https://www.googleapis.com/youtube/v3/videos`, {
-			params: { part: "snippet,contentDetails", key: YOUTUBE_API_KEY, id: videoId },
+			params: { key: process.env.YOUTUBE_API_KEY, part: "snippet,contentDetails", id: videoId },
 		});
 
 		if (!data.items.length) return res.status(404).json({ error: "Video not found or restricted" });
@@ -38,7 +27,6 @@ export const DOWNLOAD_VIDEO = async (req, res) => {
 };
 
 export const DOWNLOAD_PLAYLIST = async (req, res) => {
-	const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 	try {
 		const { url, quality } = req.body;
 		const playlistId = new URL(url).searchParams.get("list");
@@ -49,7 +37,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 		// Fetch all Playlist Items
 		while (playlist.hasMore) {
 			const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
-				params: { key: YOUTUBE_API_KEY, maxResults: 50, part: "snippet", pageToken: playlist.pageToken, playlistId },
+				params: { key: process.env.YOUTUBE_API_KEY, maxResults: 50, part: "snippet", pageToken: playlist.pageToken, playlistId },
 			});
 
 			const data = response.data;
@@ -75,7 +63,14 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 export const DOWNLOAD_STREAM = async (req, res) => {
 	try {
 		const { url, quality } = req.query;
-		const info = await ytdl.getInfo(url);
+		const info = await ytdl.getInfo(url, {
+			requestOptions: {
+				headers: {
+					"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
+					"Accept-Language": "en-US,en;q=0.9",
+				},
+			},
+		});
 
 		const format = info.formats.find((f) => f.qualityLabel === quality && f.hasVideo && f.hasAudio);
 		const altFormat = info.formats.find((f) => f.hasVideo && f.hasAudio);
