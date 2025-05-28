@@ -1,16 +1,14 @@
-import express from "express";
-import mongoose from "mongoose";
-import cors from "cors";
-import cookies from "cookie-parser";
-import dotenv from "dotenv";
+import { DOWNLOAD_PLAYLIST, DOWNLOAD_STREAM, DOWNLOAD_VIDEO } from "./controllers/index.js";
 import { corsOrigins } from "./configs/index.js";
-import { DOWNLOAD_PLAYLIST, DOWNLOAD_STREAM, DOWNLOAD_VIDEO } from "./controllers/youtube.controller.js";
+
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 
 // Configs
 export const app = express();
-dotenv.config();
 app.use(cors(corsOrigins));
-app.use(cookies());
+dotenv.config();
 
 // Middlewares
 app.use(express.json());
