@@ -28,8 +28,8 @@ export const DOWNLOAD_VIDEO = async (req, res) => {
 			},
 		]);
 	} catch (error) {
-		console.log(error);
-		res.status(404).json(`DOWNLOAD_VIDEO: ${error.message}`);
+		console.log(error.message);
+		res.status(404).json({ error: `DOWNLOAD_VIDEO: ${error.message}` });
 	}
 };
 
@@ -83,7 +83,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 					return { duration, thumbnail, title, quality: format.qualityLabel, downloadedUrl: format.url, url };
 				} catch (err) {
 					console.warn("Fail to fetch video", err.message);
-					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail to fetch ${err.message}` };
+					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail: ${err.message}` };
 				}
 			})
 		);
@@ -91,7 +91,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 		res.status(200).json(videos);
 	} catch (error) {
 		console.error(`DOWNLOAD_PLAYLIST: ${error.message}`);
-		res.status(500).json(`DOWNLOAD_PLAYLIST: ${error.message}`);
+		res.status(500).json({ error: `DOWNLOAD_PLAYLIST: ${error.message}` });
 	}
 };
 
@@ -115,6 +115,6 @@ export const DOWNLOAD_STREAM = async (req, res) => {
 		ytdl(url, { format }).pipe(res);
 	} catch (error) {
 		console.log(error.message);
-		res.status(404).json(`DOWNLOAD_STREAM: ${error.message}`);
+		res.status(404).json({ error: `DOWNLOAD_STREAM: ${error.message}` });
 	}
 };
