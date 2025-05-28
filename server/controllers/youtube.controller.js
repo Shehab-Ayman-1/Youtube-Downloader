@@ -1,8 +1,7 @@
+import { getDuration } from "../utils/index.js";
 import sanitize from "sanitize-filename";
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
-
-import { getDuration } from "../utils/index.js";
 
 export const DOWNLOAD_VIDEO = async (req, res) => {
 	try {
@@ -63,14 +62,7 @@ export const DOWNLOAD_PLAYLIST = async (req, res) => {
 export const DOWNLOAD_STREAM = async (req, res) => {
 	try {
 		const { url, quality } = req.query;
-		const info = await ytdl.getInfo(url, {
-			requestOptions: {
-				headers: {
-					"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
-					"Accept-Language": "en-US,en;q=0.9",
-				},
-			},
-		});
+		const info = await ytdl.getInfo(url);
 
 		const format = info.formats.find((f) => f.qualityLabel === quality && f.hasVideo && f.hasAudio);
 		const altFormat = info.formats.find((f) => f.hasVideo && f.hasAudio);
