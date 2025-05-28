@@ -2,7 +2,7 @@ import sanitize from "sanitize-filename";
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
 
-import { getDuration } from "../utils";
+import { getDuration } from "../utils/index.js";
 
 export const DOWNLOAD_VIDEO = async (req, res) => {
 	try {
