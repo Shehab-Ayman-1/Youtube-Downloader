@@ -1,7 +1,7 @@
+import type { AxiosResponse, AxiosInstance } from "axios";
 import { useEffect, useState } from "react";
 import { routes } from "@/constants";
 import axios from "axios";
-import type { AxiosError, AxiosResponse, AxiosInstance } from "axios";
 
 let router: AxiosInstance;
 if (import.meta.env.MODE === "production") router = axios.create(routes.remote);
@@ -16,9 +16,9 @@ type RequestResult<Data> = {
 
 type Method = "get" | "post" | "put" | "delete";
 export const useAxios = <Data,>(method?: Method, url?: string, body?: object, options?: object) => {
-   const [data, setData] = useState<Data>();
    const [isSubmitted, setIsSubmitted] = useState(false);
    const [loading, setLoading] = useState(false);
+   const [data, setData] = useState<Data>();
    const [error, setError] = useState("");
 
    const fetcher = async (
@@ -29,8 +29,8 @@ export const useAxios = <Data,>(method?: Method, url?: string, body?: object, op
    ): Promise<RequestResult<Data>> => {
       if (!method || url === "/") return { data, loading, error, isSubmitted };
 
-      setLoading(true);
       setIsSubmitted(false);
+      setLoading(true);
       setError("");
 
       try {
@@ -44,14 +44,14 @@ export const useAxios = <Data,>(method?: Method, url?: string, body?: object, op
 
          return { data, error, isSubmitted: true, loading: false };
       } catch (error: any) {
-         const err = error?.response?.data?.error || error?.message || "Network Error";
-         setError(err);
+         const reason = error?.response?.data?.error || error?.message || "Network Error";
+         console.log(reason);
 
-         console.log(error);
-         return { data: undefined, loading: false, error: err, isSubmitted: true };
+         setError(reason);
+         return { data: undefined, loading: false, error: reason, isSubmitted: true };
       } finally {
-         setLoading(false);
          setIsSubmitted(true);
+         setLoading(false);
       }
    };
 

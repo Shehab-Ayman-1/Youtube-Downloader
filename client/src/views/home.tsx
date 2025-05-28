@@ -7,18 +7,18 @@ import { routes } from "@/constants";
 import { Loading } from "@/layout";
 
 type FormDataProps = {
+   quality: string | undefined;
    type: "video" | "playlist";
    url: string;
-   quality: string | undefined;
 };
 
 export type ResponseProps = {
+   thumbnail: { url: string; width: string; height: string };
+   downloadedUrl: string;
+   duration: string;
+   quality: string;
    title: string;
    url: string;
-   quality: string;
-   duration: string;
-   downloadedUrl: string;
-   thumbnail: { url: string; width: string; height: string };
 };
 
 const baseURL = import.meta.env.MODE === "production" ? routes.remote.baseURL : routes.locale.baseURL;
@@ -31,7 +31,7 @@ export const Home = () => {
       return `${baseURL}/stream?url=${encodeURIComponent(url)}&quality=${quality}`;
    };
 
-   const handleSubmit = async (event: FormSubmitEvent) => {
+   const onSubmit = async (event: FormSubmitEvent) => {
       event.preventDefault();
 
       const isPlaylist = formData.type === "playlist" && formData.url.includes("/playlist?list=");
@@ -40,7 +40,7 @@ export const Home = () => {
       if (!formData.url || !formData.quality) return alert("Please Fill All The Required Fields.");
       if (!isPlaylist && !isVideo) return alert(`Wronge ${formData.type} URL`);
 
-      await refetch("post", formData.type, formData);
+      await refetch("post", formData.type, formData, undefined, true);
    };
 
    return (
@@ -50,7 +50,7 @@ export const Home = () => {
          <h1 className="text-center text-3xl font-extrabold text-teal-500 md:text-4xl">Youtube Downloader</h1>
          <Buttons formData={formData} setFormData={setFormData} />
 
-         <form onSubmit={handleSubmit} className="rounded-lg p-4 shadow-sp shadow-dimWhite">
+         <form onSubmit={onSubmit} className="rounded-lg p-4 shadow-sp shadow-dimWhite">
             <Fields formData={formData} setFormData={setFormData} />
             <SubmitButtons data={data} loading={loading} getDownloadURL={getDownloadURL} />
          </form>

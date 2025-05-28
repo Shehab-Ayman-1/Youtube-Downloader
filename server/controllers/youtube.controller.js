@@ -2,31 +2,35 @@ import sanitize from "sanitize-filename";
 import ytdl from "@distube/ytdl-core";
 import axios from "axios";
 
+// https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=<VIDEO_ID>&key=<API_KEY>
+
+const getDuration = (isoDuration) => {
+	const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
+	const [, hours, minutes, seconds] = isoDuration.match(regex) || [];
+
+	const totalMinutes = parseInt(hours || "0") * 60 + parseInt(minutes || "0") + Math.round(parseInt(seconds || "0") / 60);
+	return `${totalMinutes} m`;
+};
+
 export const DOWNLOAD_VIDEO = async (req, res) => {
+	const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+
 	try {
 		const { url, quality } = req.body;
-		if (!ytdl.validateURL(url)) return res.status(400).json({ error: "Invalid video URL" });
 
-		const info = await ytdl.getInfo(url);
-		const format = info.formats.find((f) => f.qualityLabel === quality && f.hasVideo && f.hasAudio);
+		const videoId = new URL(url).searchParams.get("v");
+		const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-		const availableQualities = info.formats.reduce((acc, format) => {
-			const available = format.hasVideo && format.hasAudio && !acc.includes(format.qualityLabel);
-			return available ? acc.concat(format.qualityLabel) : acc;
-		}, []);
+		console.log(videoId, YOUTUBE_API_KEY);
+		const { data } = await axios.get(`https://www.googleapis.com/youtube/v3/videos`, {
+			params: { part: "snippet,contentDetails", key: YOUTUBE_API_KEY, id: videoId },
+		});
 
-		if (!format) return res.status(404).json({ error: `The Available Qualities Are: [ ${availableQualities.join(" | ")} ]` });
+		if (!data.items.length) return res.status(404).json({ error: "Video not found or restricted" });
+		const { snippet, contentDetails } = data.items[0];
 
-		return res.status(200).json([
-			{
-				duration: Math.round(info.videoDetails.lengthSeconds / 60) + " m",
-				thumbnail: info.videoDetails.thumbnails.at(-1),
-				title: info.videoDetails.title,
-				quality: format.qualityLabel,
-				downloadedUrl: format.url,
-				url,
-			},
-		]);
+		const video = { duration: getDuration(contentDetails.duration), thumbnail: snippet.thumbnails.standard, title: snippet.title, url: videoUrl, quality };
+		return res.status(200).json([video]);
 	} catch (error) {
 		console.log(error.message);
 		res.status(404).json({ error: `DOWNLOAD_VIDEO: ${error.message}` });
@@ -35,60 +39,33 @@ export const DOWNLOAD_VIDEO = async (req, res) => {
 
 export const DOWNLOAD_PLAYLIST = async (req, res) => {
 	const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
-
 	try {
 		const { url, quality } = req.body;
-
 		const playlistId = new URL(url).searchParams.get("list");
-		if (!playlistId) return res.status(400).json({ error: "Invalid playlist URL" });
 
-		let data = [];
-		let pageToken = "";
-		let hasMore = true;
+		if (!playlistId) return res.status(400).json({ error: "Invalid playlist URL" });
+		const playlist = { data: [], pageToken: "", hasMore: true };
 
 		// Fetch all Playlist Items
-		while (hasMore) {
+		while (playlist.hasMore) {
 			const response = await axios.get(`https://www.googleapis.com/youtube/v3/playlistItems`, {
-				params: {
-					key: YOUTUBE_API_KEY,
-					maxResults: 50,
-					part: "snippet",
-					pageToken,
-					playlistId,
-				},
+				params: { key: YOUTUBE_API_KEY, maxResults: 50, part: "snippet", pageToken: playlist.pageToken, playlistId },
 			});
 
-			data = data.concat(response.data.items);
-			pageToken = response.data.nextPageToken;
-			hasMore = !!pageToken;
+			const data = response.data;
+			playlist.data = playlist.data.concat(data.items);
+
+			playlist.pageToken = data.nextPageToken;
+			playlist.hasMore = !!playlist.pageToken;
 		}
 
-		// Read all videos from the playlist
-		const videos = await Promise.all(
-			data.map(async (item) => {
-				const videoId = item.snippet.resourceId.videoId;
-				const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+		const videos = playlist.data.map(({ snippet }) => {
+			const videoId = snippet.resourceId.videoId;
+			const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+			return { thumbnail: snippet.thumbnails.standard, url: videoUrl, duration: "0 m", title: snippet.title, quality };
+		});
 
-				try {
-					const info = await ytdl.getInfo(videoUrl);
-					const format = info.formats.find((f) => f.qualityLabel === quality && f.hasVideo && f.hasAudio);
-					const altFormat = info.formats.find((f) => f.hasVideo && f.hasAudio);
-
-					const duration = Math.round(info.videoDetails.lengthSeconds / 60) + " m";
-					const thumbnail = info.videoDetails.thumbnails.at(-1);
-					const title = info.videoDetails.title;
-					const url = videoUrl;
-
-					if (!format) return { duration, thumbnail, title, url, quality: altFormat.qualityLabel, downloadedUrl: altFormat.url };
-					return { duration, thumbnail, title, quality: format.qualityLabel, downloadedUrl: format.url, url };
-				} catch (err) {
-					console.warn("Fail to fetch video", err.message);
-					return { duration: "0 m", thumbnail: "", quality: "----", downloadedUrl: "", url: "", title: `Fail: ${err.message}` };
-				}
-			})
-		);
-
-		res.status(200).json(videos);
+		return res.status(200).json(videos);
 	} catch (error) {
 		console.error(`DOWNLOAD_PLAYLIST: ${error.message}`);
 		res.status(500).json({ error: `DOWNLOAD_PLAYLIST: ${error.message}` });
@@ -101,18 +78,13 @@ export const DOWNLOAD_STREAM = async (req, res) => {
 		const info = await ytdl.getInfo(url);
 
 		const format = info.formats.find((f) => f.qualityLabel === quality && f.hasVideo && f.hasAudio);
-		const availableQualities = info.formats.reduce((acc, format) => {
-			const available = format.hasVideo && format.hasAudio;
-			return available && !acc.includes(format.qualityLabel) ? acc.concat(format.qualityLabel) : acc;
-		}, []);
-
-		if (!format) return res.status(404).json({ error: `The Available Qualities Are: [ ${availableQualities.join(" | ")} ]` });
+		const altFormat = info.formats.find((f) => f.hasVideo && f.hasAudio);
 
 		const title = sanitize(info.videoDetails.title) || "[hidden]";
 		const filename = `${title}.mp4`;
 
 		res.setHeader("Content-Disposition", `attachment; filename="${encodeURIComponent(filename)}"`);
-		ytdl(url, { format }).pipe(res);
+		ytdl(url, { format: format || altFormat }).pipe(res);
 	} catch (error) {
 		console.log(error.message);
 		res.status(404).json({ error: `DOWNLOAD_STREAM: ${error.message}` });

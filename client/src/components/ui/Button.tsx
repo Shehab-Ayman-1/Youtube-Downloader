@@ -11,8 +11,8 @@ type ButtonProps = {
    disabled?: boolean;
    fullWidth?: boolean;
    size?: "sm" | "md" | "lg";
-   onClick?: (event: ButtonEvent) => any;
    children?: ReactNode;
+   onClick?: (event: ButtonEvent) => any;
 };
 
 export const Button = ({
