@@ -21,14 +21,14 @@ export type ResponseProps = {
    url: string;
 };
 
-const baseURL = import.meta.env.MODE === "production" ? routes.remote.baseURL : routes.locale.baseURL;
-
 export const Home = () => {
    const { data, loading, error, isSubmitted, refetch } = useAxios<ResponseProps[]>();
    const [formData, setFormData] = useState<FormDataProps>({ type: "playlist", url: "", quality: "360p" });
 
    const getDownloadURL = (url: string, quality: string) => {
-      return `${baseURL}/stream?url=${encodeURIComponent(url)}&quality=${quality}`;
+      const baseURL = routes.locale.baseURL;
+      const encodedURL = encodeURIComponent(url);
+      return `${baseURL}/stream?url=${encodedURL}&quality=${quality}`;
    };
 
    const onSubmit = async (event: FormSubmitEvent) => {

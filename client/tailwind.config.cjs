@@ -7,12 +7,8 @@ module.exports = withMT({
 
    theme: {
       extend: {
-         boxShadow: {
-            sp: "0 0 20px #aaa",
-         },
-         fontFamily: {
-            sans: ["STV", "Merienda", "sans-serif"],
-         },
+         boxShadow: { sp: "0 0 20px #aaa" },
+         fontFamily: { sans: ["STV", "Merienda", "sans-serif"] },
          colors: {
             dimWhite: "var(--dimWhite)",
             darkGray: "var(--darkGray)",
